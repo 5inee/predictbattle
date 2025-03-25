@@ -1,0 +1,496 @@
+// frontend/package.json
+{
+    "name": "predict-battle-frontend",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+      "dev": "next dev",
+      "build": "next build",
+      "start": "next start",
+      "lint": "next lint"
+    },
+    "dependencies": {
+      "axios": "^1.3.4",
+      "next": "^13.2.4",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "react-toastify": "^9.1.2",
+      "@fortawesome/fontawesome-svg-core": "^6.4.0",
+      "@fortawesome/free-solid-svg-icons": "^6.4.0",
+      "@fortawesome/react-fontawesome": "^0.2.0",
+      "js-cookie": "^3.0.1"
+    },
+    "devDependencies": {
+      "autoprefixer": "^10.4.14",
+      "postcss": "^8.4.21",
+      "tailwindcss": "^3.3.1"
+    }
+  }
+  
+  // frontend/next.config.js
+  /** @type {import('next').NextConfig} */
+  const nextConfig = {
+    reactStrictMode: true,
+    i18n: {
+      locales: ['ar'],
+      defaultLocale: 'ar',
+      localeDetection: false
+    }
+  }
+  
+  module.exports = nextConfig
+  
+  // frontend/tailwind.config.js
+  /** @type {import('tailwindcss').Config} */
+  module.exports = {
+    content: [
+      "./src/pages/**/*.{js,ts,jsx,tsx}",
+      "./src/components/**/*.{js,ts,jsx,tsx}",
+    ],
+    theme: {
+      extend: {
+        colors: {
+          primary: {
+            DEFAULT: '#5e60ce',
+            light: '#7d7ffe',
+            dark: '#4a4bb8',
+          },
+          secondary: {
+            DEFAULT: '#64dfdf',
+            light: '#72efef',
+            dark: '#56bfbf',
+          },
+          dark: {
+            DEFAULT: '#1a1a2e',
+            darker: '#0f0f1a',
+            medium: '#505073',
+          },
+          light: {
+            DEFAULT: '#f8f9fa',
+            lighter: '#ffffff',
+          },
+          success: '#06d6a0',
+          warning: '#f9c74f',
+          error: '#ef476f',
+          info: '#118ab2',
+        },
+        borderRadius: {
+          'sm': '6px',
+          'md': '12px',
+          'lg': '20px',
+          'xl': '28px',
+        },
+        boxShadow: {
+          'sm': '0 2px 8px rgba(0, 0, 0, 0.08)',
+          'md': '0 4px 12px rgba(0, 0, 0, 0.12)',
+          'lg': '0 8px 24px rgba(0, 0, 0, 0.16)',
+        },
+        transitionDuration: {
+          'fast': '0.2s',
+          'medium': '0.3s',
+          'slow': '0.5s',
+        },
+        fontFamily: {
+          'cairo': ['Cairo', 'sans-serif'],
+          'poppins': ['Poppins', 'sans-serif'],
+        },
+      },
+    },
+    plugins: [],
+  }
+  
+  // frontend/src/pages/_app.js
+  import '@/styles/globals.css';
+  import { AuthProvider } from '@/contexts/AuthContext';
+  import { ToastContainer } from 'react-toastify';
+  import 'react-toastify/dist/ReactToastify.css';
+  import { config } from '@fortawesome/fontawesome-svg-core';
+  import '@fortawesome/fontawesome-svg-core/styles.css';
+  
+  // للتأكد من عدم إضافة FontAwesome CSS تلقائيًا
+  config.autoAddCss = false;
+  
+  function MyApp({ Component, pageProps }) {
+    return (
+      <AuthProvider>
+        <div dir="rtl" lang="ar">
+          <Component {...pageProps} />
+          <ToastContainer
+            position="top-center"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop
+            closeOnClick
+            rtl={true}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
+        </div>
+      </AuthProvider>
+    );
+  }
+  
+  export default MyApp;
+  
+  // frontend/src/styles/globals.css
+  @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+  
+  @tailwind base;
+  @tailwind components;
+  @tailwind utilities;
+  
+  @layer base {
+    html {
+      font-family: Cairo, Poppins, system-ui, sans-serif;
+    }
+    
+    body {
+      @apply bg-gradient-to-br from-light to-light-lighter bg-fixed text-dark min-h-screen;
+      line-height: 1.6;
+    }
+  }
+  
+  @layer components {
+    .app-container {
+      @apply max-w-7xl mx-auto p-5;
+    }
+    
+    .main-header {
+      @apply flex justify-center items-center py-5 mb-10;
+    }
+    
+    .logo-container {
+      @apply flex items-center;
+    }
+    
+    .logo-icon {
+      @apply bg-primary text-white w-10 h-10 rounded-full flex items-center justify-center text-xl;
+    }
+    
+    .logo-text {
+      @apply text-2xl font-bold text-primary mr-2;
+    }
+    
+    .card {
+      @apply bg-white rounded-lg shadow-md overflow-hidden mb-10 max-w-2xl mx-auto transition-transform duration-medium;
+    }
+    
+    .card:hover {
+      @apply transform -translate-y-1 shadow-lg;
+    }
+    
+    .card-header {
+      @apply p-7 bg-gradient-to-br from-primary to-primary-dark text-white;
+    }
+    
+    .card-header h1 {
+      @apply text-2xl font-semibold mb-2;
+    }
+    
+    .card-body {
+      @apply p-7;
+    }
+    
+    .subtitle {
+      @apply opacity-80 text-base font-light;
+    }
+    
+    .form-group {
+      @apply mb-6;
+    }
+    
+    .input-wrapper {
+      @apply relative flex items-center;
+    }
+    
+    .input-icon {
+      @apply absolute right-4 text-dark-medium text-lg;
+    }
+    
+    input, textarea, select {
+      @apply w-full py-3.5 px-11 border-2 border-gray-200 rounded-md font-cairo text-base text-dark transition-colors duration-fast;
+    }
+    
+    input:focus, textarea:focus, select:focus {
+      @apply border-primary outline-none;
+    }
+    
+    textarea {
+      @apply resize-y min-h-[120px] leading-relaxed;
+    }
+    
+    .btn {
+      @apply inline-flex items-center justify-center gap-2 py-3 px-6 text-base font-medium border-none rounded-md cursor-pointer transition-all duration-fast text-center w-full;
+    }
+    
+    .btn-primary {
+      @apply bg-gradient-to-br from-primary to-primary-dark text-white shadow-md shadow-primary/30;
+    }
+    
+    .btn-primary:hover {
+      @apply bg-gradient-to-br from-primary-light to-primary shadow-lg shadow-primary/40 transform -translate-y-0.5;
+    }
+    
+    .btn-secondary {
+      @apply bg-gray-100 text-primary;
+    }
+    
+    .btn-secondary:hover {
+      @apply bg-primary/10;
+    }
+    
+    .btn-text {
+      @apply bg-transparent text-primary shadow-none py-3;
+    }
+    
+    .btn-text:hover {
+      @apply bg-primary/10;
+    }
+    
+    .btn-large {
+      @apply py-4 px-6 text-lg;
+    }
+    
+    .separator {
+      @apply flex items-center my-6 text-dark-medium;
+    }
+    
+    .separator::before,
+    .separator::after {
+      @apply content-[""] flex-1 h-px bg-gray-200;
+    }
+    
+    .separator span {
+      @apply px-4 text-sm text-dark-medium opacity-70;
+    }
+    
+    .error-message {
+      @apply text-error text-sm flex items-center gap-2 mt-2 hidden;
+    }
+    
+    .game-card {
+      @apply max-w-4xl;
+    }
+    
+    .game-meta {
+      @apply flex flex-wrap gap-4 mt-3;
+    }
+    
+    .game-code {
+      @apply flex items-center gap-2 bg-white/20 py-2 px-3 rounded-md text-sm cursor-pointer;
+    }
+    
+    .player-stat {
+      @apply flex items-center gap-2 bg-white/20 py-2 px-3 rounded-md text-sm;
+    }
+    
+    .status-banner {
+      @apply p-4 rounded-md mb-6 flex items-center gap-3 font-medium;
+    }
+    
+    .status-banner.waiting {
+      @apply bg-warning/15 text-warning border-r-4 border-warning;
+    }
+    
+    .status-banner.success {
+      @apply bg-success/15 text-success border-r-4 border-success;
+    }
+    
+    .pulse {
+      @apply animate-pulse;
+    }
+    
+    .prediction-panel {
+      @apply bg-light rounded-md overflow-hidden mb-6;
+    }
+    
+    .panel-header {
+      @apply bg-primary-light p-4 flex justify-between items-center;
+    }
+    
+    .panel-header h2 {
+      @apply text-white text-lg font-medium;
+    }
+    
+    .prediction-actions {
+      @apply flex gap-2;
+    }
+    
+    .action-btn {
+      @apply bg-white/25 border-none rounded-sm text-white py-1.5 px-3 text-sm cursor-pointer flex items-center gap-1.5 transition-colors duration-fast;
+    }
+    
+    .action-btn:hover {
+      @apply bg-white/40;
+    }
+    
+    .prediction-input-container {
+      @apply p-4;
+    }
+    
+    .prediction-input-container textarea {
+      @apply p-4 min-h-[240px] border border-gray-200 rounded-md text-base w-full bg-white text-right;
+    }
+    
+    .prediction-counter {
+      @apply bg-primary/10 rounded-md p-4 flex items-center justify-center gap-3 my-6;
+    }
+    
+    .counter-icon {
+      @apply inline-block text-primary text-2xl;
+    }
+    
+    .counter-text {
+      @apply inline-block font-semibold text-primary text-lg;
+    }
+    
+    .section-title {
+      @apply mb-5 text-dark-medium text-xl relative pb-2 text-right;
+    }
+    
+    .section-title::after {
+      @apply content-[''] absolute right-0 bottom-0 w-14 h-0.5 bg-gradient-to-l from-primary to-secondary;
+    }
+    
+    .predictions-container {
+      @apply grid gap-5;
+    }
+    
+    .prediction-card {
+      @apply bg-white rounded-md shadow-sm overflow-hidden border border-gray-200 transition-all duration-fast;
+    }
+    
+    .prediction-card:hover {
+      @apply transform -translate-y-1 shadow-md;
+    }
+    
+    .prediction-header {
+      @apply p-4 flex justify-between items-center border-b border-gray-200;
+    }
+    
+    .predictor-info {
+      @apply flex items-center gap-3;
+    }
+    
+    .predictor-avatar {
+      @apply w-9 h-9 rounded-full flex items-center justify-center text-white font-medium;
+    }
+    
+    .predictor-name {
+      @apply font-medium text-dark;
+    }
+    
+    .timestamp {
+      @apply text-dark-medium text-sm opacity-80;
+    }
+    
+    .prediction-content {
+      @apply p-5 leading-relaxed text-dark text-right;
+    }
+    
+    .sessions-list {
+      @apply flex flex-col gap-4;
+    }
+    
+    .session-card {
+      @apply bg-light rounded-md p-4 border border-gray-200 transition-all duration-fast;
+    }
+    
+    .session-card:hover {
+      @apply transform -translate-y-0.5 shadow-sm;
+    }
+    
+    .session-header {
+      @apply flex justify-between mb-2.5 items-start;
+    }
+    
+    .session-title {
+      @apply font-semibold text-dark text-base leading-relaxed flex-1;
+    }
+    
+    .session-date {
+      @apply text-dark-medium text-sm whitespace-nowrap mr-2.5;
+    }
+    
+    .session-meta {
+      @apply flex gap-4 mb-2.5 flex-wrap;
+    }
+    
+    .session-code, 
+    .session-participants {
+      @apply text-dark-medium text-sm flex items-center gap-1.5;
+    }
+    
+    .session-status {
+      @apply text-sm flex items-center gap-1.5;
+    }
+    
+    .session-status.completed {
+      @apply text-success;
+    }
+    
+    .session-status.in-progress {
+      @apply text-warning;
+    }
+    
+    .session-actions {
+      @apply flex justify-end mt-2.5;
+    }
+    
+    .btn-sm {
+      @apply py-2 px-4 text-sm;
+    }
+    
+    .tabs-container {
+      @apply border-b border-gray-200;
+    }
+    
+    .tabs {
+      @apply flex px-5;
+    }
+    
+    .tab-btn {
+      @apply bg-transparent border-none py-3.5 px-5 text-base font-medium text-dark-medium cursor-pointer relative transition-colors duration-fast flex items-center gap-2;
+    }
+    
+    .tab-btn:hover {
+      @apply text-primary;
+    }
+    
+    .tab-btn.active {
+      @apply text-primary font-semibold;
+    }
+    
+    .tab-btn.active::after {
+      @apply content-[''] absolute bottom-0 right-0 left-0 h-0.5 bg-primary rounded-t;
+    }
+    
+    .tab-content {
+      @apply hidden;
+    }
+    
+    .tab-content.active {
+      @apply block;
+    }
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  .fade-in {
+    animation: fadeIn 0.5s;
+  }
+  
+  .hidden {
+    display: none !important;
+  }
+  
+  .visible {
+    display: block !important;
+  }
+  
+  // frontend/.env.local
+  NEXT_PUBLIC_API_URL=http://localhost:5000/api
