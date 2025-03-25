@@ -120,11 +120,3 @@ const generateToken = (id) => {
 };
 
 module.exports = generateToken;
-
-// backend/.env (هذا الملف للأغراض التطويرية فقط، يجب عدم رفعه إلى المستودع)
-NODE_ENV=development
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/predict_battle
-# سنقوم باستبدالها برابط Railway لاحقًا
-JWT_SECRET=your_jwt_secret_key_here
-FRONTEND_URL=http://localhost:3000
