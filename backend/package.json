@@ -1,5 +1,5 @@
 {
-    "name": "predict-battle-backend",
+    "name": "predictbattle-backend",
     "version": "1.0.0",
     "description": "Backend API for PredictBattle platform",
     "main": "server.js",

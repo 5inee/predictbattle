@@ -1,4 +1,4 @@
-// backend/server.js
+// backend/server.js - مشروع PredictBattle
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
@@ -21,7 +21,11 @@ app.use(morgan('dev'));
 
 // نقطة نهاية للتحقق من حالة الخادم
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', message: 'الخادم يعمل بشكل صحيح' });
+  res.json({ 
+    status: 'ok', 
+    message: 'الخادم يعمل بشكل صحيح',
+    project: 'PredictBattle'
+  });
 });
 
 // مسارات API بسيطة للاختبار
@@ -42,6 +46,7 @@ app.get('/api/test-db', async (req, res) => {
     
     res.json({ 
       status: 'success', 
+      project: 'PredictBattle',
       dbConnection: statusText[dbStatus] || 'غير معروف',
       dbInfo: {
         host: mongoose.connection.host,
@@ -65,10 +70,10 @@ app.use((err, req, res, next) => {
 // الاتصال بقاعدة البيانات
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
-    console.log('تم الاتصال بقاعدة البيانات بنجاح');
+    console.log('تم الاتصال بقاعدة البيانات بنجاح - PredictBattle');
     
     // تشغيل الخادم بعد الاتصال بقاعدة البيانات
     const PORT = process.env.PORT || 5000;
-    app.listen(PORT, () => console.log(`تم تشغيل الخادم على المنفذ ${PORT}`));
+    app.listen(PORT, () => console.log(`تم تشغيل خادم PredictBattle على المنفذ ${PORT}`));
   })
-  .catch((err) => console.log('خطأ في الاتصال بقاعدة البيانات:', err.message));
+  .catch((err) => console.log('خطأ في الاتصال بقاعدة البيانات PredictBattle:', err.message));
